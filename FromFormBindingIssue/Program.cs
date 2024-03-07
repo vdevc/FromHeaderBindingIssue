@@ -1,33 +1,49 @@
-using Microsoft.AspNetCore.Mvc;
+using Asp.Versioning;
+using DotSwashbuckle.AspNetCore.SwaggerGen;
+using FromFormBindingIssue;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services
+    .AddEndpointsApiExplorer()
+    .AddApiVersioning(options =>
+    {
+        options.ReportApiVersions = true;
+        options.DefaultApiVersion = new ApiVersion(1, 0);
+        options.ApiVersionReader =
+            new HeaderApiVersionReader("x-api-version");
+    })
+    .AddApiExplorer(apiExplorerOptions =>
+    {
+        apiExplorerOptions.GroupNameFormat = "'v'VVV";
+        apiExplorerOptions.SubstituteApiVersionInUrl = true;
+    });
+builder.Services
+    .AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerGenOptions>()
+    .AddSwaggerGen();
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+var application = builder.Build();
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (application.Environment.IsDevelopment())
 {
-    _ = app.UseSwagger();
-    _ = app.UseSwaggerUI();
+    application
+        .UseSwagger()
+        .UseSwaggerUI(swaggerOptions =>
+        {
+            IEnumerable<string> descriptions = application
+                .DescribeApiVersions()
+                .Select(description => description.GroupName);
+            foreach (var description in descriptions)
+            {
+                string url = $"/swagger/{description}/swagger.json";
+                string name = description.ToUpperInvariant();
+                swaggerOptions.SwaggerEndpoint(url, name);
+            }
+        });
 }
 
-app.UseHttpsRedirection();
+application.MapApis();
 
-app.MapPost("/api/people-minimalapi", ([FromForm] Person person, [FromForm] Address address)
-    => TypedResults.NoContent())
-.WithOpenApi();
+application.Run();
 
-app.MapControllers();
-
-app.Run();
-
-public record class Person(string FirstName, string LastName);
-
-public record class Address(string Street, string City, string State, string ZipCode);
