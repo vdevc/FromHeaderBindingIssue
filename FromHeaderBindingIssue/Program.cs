@@ -1,7 +1,7 @@
 using Asp.Versioning;
-using DotSwashbuckle.AspNetCore.SwaggerGen;
-using FromFormBindingIssue;
+using FromHeaderBindingIssue;
 using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,9 +1,9 @@
 using Asp.Versioning.ApiExplorer;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using DotSwashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace FromFormBindingIssue;
+namespace FromHeaderBindingIssue;
 
 internal class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
 {

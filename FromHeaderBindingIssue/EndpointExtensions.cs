@@ -18,7 +18,7 @@ internal static class EndpointExtensions
     {
         var apiName = "Individuals";
         var routeName = apiName.Replace(' ', '-').ToLower();
-        var group = string.Concat("/customers/{customerId:guid}/", routeName);
+        var group = string.Concat("/customers/{customerId:int}/", routeName);
         var api = application
             .NewApiVersionSet(apiName)
             .HasApiVersion(new ApiVersion(1, 0))
@@ -32,7 +32,7 @@ internal static class EndpointExtensions
         routeGroupBuilder
             .MapGet("/", (
                 [FromHeader(Name = "x-api-version")] string apiVersion,
-                [FromRoute] Guid customerId,
+                [FromRoute] int customerId,
                 [FromServices] ILoggerFactory loggerFactory,
                 [FromServices] LinkGenerator linkGenerator
             ) =>
@@ -52,7 +52,7 @@ internal static class EndpointExtensions
     {
         var apiName = "Businesses";
         var routeName = apiName.ToLower();
-        var group = string.Concat("/customers/{customerId:guid}/", routeName);
+        var group = string.Concat("/customers/{customerId:int}/", routeName);
         var api = application
             .NewApiVersionSet(apiName)
             .HasApiVersion(new ApiVersion(1, 0))
@@ -66,7 +66,7 @@ internal static class EndpointExtensions
         routeGroupBuilder
             .MapGet("/", (
                 [FromHeader(Name = "x-api-version")] string apiVersion,
-                [FromRoute] Guid customerId,
+                [FromRoute] int customerId,
                 [FromServices] ILoggerFactory loggerFactory,
                 [FromServices] LinkGenerator linkGenerator
             ) =>
