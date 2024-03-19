@@ -1,3 +1,3 @@
-# [FromForm] Binding Issue
+# [FromHeader] Binding Issue
 
-This repository shows an issue with Swagger when using multiple [FromForm] paramters in Minimal API
+This repository shows an issue with Swagger when using [Asp.Versioning](https://github.com/dotnet/aspnet-api-versioning) in Minimal API
